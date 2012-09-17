@@ -1,0 +1,62 @@
+#!/usr/bin/env perl
+
+use utf8;
+use Carp;
+use File::Spec;
+use Try::Tiny;
+
+use Searchd;
+
+unless ( @ARGV ) {
+    print <<USAGE;
+Usage: $0 <dbfile> <file> <file>...
+
+Add files to index in <dbfile>.
+USAGE
+    exit 1;
+}
+
+my $dbfile = shift;
+my $s = Searchd->new($dbfile);
+
+sub insert_or_update {
+    my $path = shift;
+    my $cv = AE::cv;
+    unless ( -f $path ) {
+        warn "No such file: $path";
+        $cv->send('');
+    } else {
+        $path = File::Spec->rel2abs($path);
+        my $text = $path;
+        utf8::decode($text);
+        $text .= "-" . do{ open my $fh, $path; local $/; <$fh> }  if $path =~ /\.txt$/;
+        $s->add($path, $text)->cb(sub{
+            my $c = shift;
+            try{
+                $c->recv;
+                print "Added: $path\n";
+            } catch {
+                warn "$@";
+            };
+            $cv->send(1);
+        });
+    }
+    $cv;
+}
+
+my $cv = AE::cv;
+$s->begin_work(sub{
+    return $cv->croak("Can't start transaction: $@")  if $@;
+    my $loop; $loop = sub {
+        unless ( @ARGV ) {
+            return $s->commit(sub{
+                return $cv->croak("Can't commit: $@")  if $@;
+                $cv->send;
+            });
+        }
+        insert_or_update(shift @ARGV)->cb($loop);
+    };
+    $loop->();
+});
+
+$cv->recv;

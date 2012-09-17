@@ -1,0 +1,21 @@
+#!/usr/bin/env perl
+
+use Searchd;
+use Try::Tiny;
+
+unless ( @ARGV ) {
+    print <<USAGE;
+Usage: $0 <dbfile>
+
+Init SQLite database file.
+USAGE
+    exit 1;
+}
+
+my $dbfile = shift;
+my $s = Searchd->new($dbfile);
+try{
+    print "Initialized $dbfile\n"  if $s->init->recv;
+} catch {
+    print "$_\n";
+}

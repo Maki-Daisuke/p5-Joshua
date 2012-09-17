@@ -1,0 +1,22 @@
+#!/usr/bin/env perl
+
+use utf8;
+use Searchd;
+use Try::Tiny;
+
+unless ( @ARGV >= 2 ) {
+    print <<USAGE;
+Usage: $0 <dbfile> <query> <query>...
+
+Search files using index in <dbfile>.
+USAGE
+    exit 1;
+}
+
+
+my $s = Searchd->new(shift);
+my $q = join " ", @ARGV;
+utf8::decode($q);
+foreach ( $s->search($q)->recv ) {
+    print "$_\n";
+}

@@ -1,0 +1,27 @@
+#!/usr/bin/env perl
+
+use Searchd;
+
+unless ( @ARGV ) {
+    print <<USAGE;
+Usage: $0 <dbfile> <file> <file>...
+
+Add files to index in <dbfile>.
+USAGE
+    exit 1;
+}
+
+my $dbfile = shift;
+my $s = Searchd->new($dbfile);
+
+my $cv = AE::cv;
+$s->select('files', '*', sub{
+    my (undef, $arr, $rv) = @_;
+    $cv->croak($@)  unless $#_;
+    foreach ( @$arr ) {
+        print join " ", @$_;
+        print "\n";
+    }
+    $cv->send;
+});
+$cv->recv;
