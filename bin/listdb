@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-use Searchd;
+use Joshua;
 
 unless ( @ARGV ) {
     print <<USAGE;
@@ -12,7 +12,7 @@ USAGE
 }
 
 my $dbfile = shift;
-my $s = Searchd->new($dbfile);
+my $s = Joshua->new($dbfile);
 
 my $cv = AE::cv;
 $s->select('files', '*', sub{

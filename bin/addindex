@@ -5,7 +5,7 @@ use Carp;
 use File::Spec;
 use Try::Tiny;
 
-use Searchd;
+use Joshua;
 
 unless ( @ARGV ) {
     print <<USAGE;
@@ -17,7 +17,7 @@ USAGE
 }
 
 my $dbfile = shift;
-my $s = Searchd->new($dbfile);
+my $s = Joshua->new($dbfile);
 
 sub insert_or_update {
     my $path = shift;

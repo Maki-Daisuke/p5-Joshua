@@ -1,4 +1,4 @@
-package Searchd::Ngram;
+package Joshua::Ngram;
 
 use 5.010;
 

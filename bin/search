@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 use utf8;
-use Searchd;
+use Joshua;
 use Try::Tiny;
 
 unless ( @ARGV >= 2 ) {
@@ -14,7 +14,7 @@ USAGE
 }
 
 
-my $s = Searchd->new(shift);
+my $s = Joshua->new(shift);
 my $q = join " ", @ARGV;
 utf8::decode($q);
 foreach ( $s->search($q)->recv ) {

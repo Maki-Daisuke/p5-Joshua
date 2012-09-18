@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-use Searchd;
+use Joshua;
 use Try::Tiny;
 
 unless ( @ARGV ) {
@@ -13,7 +13,7 @@ USAGE
 }
 
 my $dbfile = shift;
-my $s = Searchd->new($dbfile);
+my $s = Joshua->new($dbfile);
 try{
     print "Initialized $dbfile\n"  if $s->init->recv;
 } catch {

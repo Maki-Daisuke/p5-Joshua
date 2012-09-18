@@ -1,4 +1,4 @@
-package Searchd;
+package Joshua;
 use 5.010;
 
 use utf8;
@@ -7,7 +7,7 @@ use parent 'AnyEvent::DBI::Abstract';
 use AnyEvent;
 use DBD::SQLite;
 
-use Searchd::Ngram;
+use Joshua::Ngram;
 
 
 sub new {
@@ -23,7 +23,7 @@ sub init {
             id           INTEGER  PRIMARY KEY AUTOINCREMENT,
             path         TEXT     UNIQUE                   ,
             search_text  TEXT                              ,
-            tokenize=perl 'Searchd::_tokenizer'
+            tokenize=perl 'Joshua::_tokenizer'
         );
         CREATE UNIQUE INDEX idx_files_path ON files(path);
     }, sub{
@@ -38,7 +38,7 @@ sub init {
 }
 
 sub _tokenizer {
-    \&Searchd::Ngram::bigram_iterator;
+    \&Joshua::Ngram::bigram_iterator;
 }
 
 sub add {

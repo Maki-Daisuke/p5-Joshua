@@ -1,5 +1,5 @@
 use inc::Module::Install;
-name 'Searchd';
+name 'Joshua';
 version '0.1';
 
 requires 'parent';
