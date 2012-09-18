@@ -1,0 +1,11 @@
+.DS_Store
+.carton
+.git
+.gitignore
+.idea
+local
+MYMETA.json
+MYMETA.yml
+Makefile
+MANIFEST.SKIP
+test\..*
