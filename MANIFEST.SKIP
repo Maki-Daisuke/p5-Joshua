@@ -1,11 +1,13 @@
 .DS_Store
-.carton
 .git
 .gitignore
 .idea
+cpanfile.snapshot
 local
 MYMETA.json
 MYMETA.yml
 Makefile
+Makefile.old
+MANIFEST.bak
 MANIFEST.SKIP
 test\..*
