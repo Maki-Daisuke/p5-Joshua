@@ -20,10 +20,11 @@ sub init {
     my $cv = AE::cv;
     $self->exec(qq{
         CREATE VIRTUAL TABLE files USING fts3 (
-            id           INTEGER  PRIMARY KEY AUTOINCREMENT,
-            path         TEXT     UNIQUE                   ,
-            search_text  TEXT                              ,
-            tokenize=perl 'Joshua::_tokenizer'
+            id           INTEGER  PRIMARY KEY AUTOINCREMENT,  -- Primary key
+            path         TEXT     UNIQUE                   ,  -- Absolute path of this file
+            search_text  TEXT                              ,  -- Text to be indexed for FTS
+            time         INTEGER                           ,  -- UNIX epoch time when Joshua indexed
+            tokenize=perl '@{[ __PACKAGE__ ]}::_tokenizer'
         );
         CREATE UNIQUE INDEX idx_files_path ON files(path);
     }, sub{
